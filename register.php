@@ -14,34 +14,38 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="auth-page">
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-logo" style="text-align: center; margin-bottom: 20px;">
-                <img src="assets/img/logo.jpeg" alt="NoteCode Logo" style="max-height: 128px; width: 228px; height: auto;">
+    <div class="auth-container split-layout">
+        <div class="auth-left">
+            <div class="auth-logo-large">
+                <img src="assets/img/logo.jpeg" alt="NoteCode Logo">
             </div>
-            <p>Comece a organizar suas idéias hoje!</p>
+        </div>
+        <div class="auth-right">
+            <div class="auth-card">
+                <p>Comece a organizar suas idéias hoje!</p>
 
-            <?php if (isset($_SESSION['error'])): ?>
-                <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; border: 1px solid rgba(239, 68, 68, 0.2);">
-                    <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
-                </div>
-            <?php endif; ?>
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error">
+                        <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                    </div>
+                <?php endif; ?>
 
-            <form action="auth.php" method="POST">
-                <input type="hidden" name="action" value="register">
-                <div class="form-group">
-                    <label for="username">Escolha um Usuário</label>
-                    <input type="text" id="username" name="username" class="form-input" placeholder="Ex: joao_silva" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Sua Senha</label>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-primary">Criar Conta</button>
-            </form>
+                <form action="auth.php" method="POST">
+                    <input type="hidden" name="action" value="register">
+                    <div class="form-group">
+                        <label for="username">Escolha um Usuário</label>
+                        <input type="text" id="username" name="username" class="form-input" placeholder="Ex: joao_silva" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Sua Senha</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Criar Conta</button>
+                </form>
 
-            <div class="auth-footer">
-                Já tem uma conta? <a href="login.php">Faça login</a>
+                <div class="auth-footer">
+                    Já tem uma conta? <a href="login.php">Faça login</a>
+                </div>
             </div>
         </div>
     </div>

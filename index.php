@@ -26,7 +26,7 @@ if (!isset($_SESSION['user_id'])) {
             <nav class="nav-menu">
                 <li class="nav-item">
                     <a href="#" class="nav-link active" id="btn-all-notes" onclick="setFilter('all')">
-                        <i class="ri-sticky-note-line"></i> Todas as Notas
+                        <i class="ri-book-shelf-line"></i> Meus Cadernos
                     </a>
                 </li>
                 <li class="nav-item">
@@ -53,10 +53,10 @@ if (!isset($_SESSION['user_id'])) {
         <main class="main-content">
             <header class="header-actions">
                 <div class="page-title">
-                    <h2 id="current-view-title">Todas as Notas</h2>
+                    <h2 id="current-view-title">Meus Cadernos</h2>
                 </div>
                 <button class="btn-new-note" onclick="openModal()">
-                    <i class="ri-add-line"></i> Nova Nota
+                    <i class="ri-add-line"></i> Novo Caderno
                 </button>
             </header>
 
@@ -70,32 +70,73 @@ if (!isset($_SESSION['user_id'])) {
         </main>
     </div>
 
-    <!-- Modal for Create/Edit -->
+    <!-- Modal for Create (Notebook/Section) -->
     <div id="note-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">
                 <i class="ri-close-line"></i>
             </button>
-            <h3 style="margin-bottom: 24px; font-family: 'Outfit'; font-size: 1.5rem;" id="modal-title">Nova Nota</h3>
+            <h3 style="margin-bottom: 24px; font-family: 'Outfit'; font-size: 1.5rem;" id="modal-title">Novo Caderno</h3>
             
             <form id="note-form">
                 <input type="hidden" id="note-id">
                 <div class="form-group">
-                    <label for="title">Título</label>
-                    <input type="text" id="title" class="form-input" placeholder="Título da nota" required>
+                    <label for="title">Título do Caderno</label>
+                    <input type="text" id="title" class="form-input" placeholder="Ex: Faculdade, Trabalho, Diário" required>
                 </div>
-                <div class="form-group">
-                    <label for="description">Descrição</label>
-                    <textarea id="description" class="form-input" placeholder="Escreva aqui sua nota..." style="min-height: 200px; resize: vertical;"></textarea>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
-                    <button type="button" id="delete-note-btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; display: none;" onclick="deleteNote()">
-                        <i class="ri-delete-bin-line"></i> Excluir
-                    </button>
-                    <button type="submit" class="btn-primary" style="width: auto; min-width: 140px;">Salvar Nota</button>
+                <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                    <button type="submit" class="btn-primary" style="width: auto; min-width: 140px;">Criar Caderno</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal for Notebook View (OneNote style) -->
+    <div id="notebook-modal" class="modal-overlay">
+        <div class="modal-content modal-notebook">
+            <header class="notebook-header">
+                <h3 id="current-notebook-title" style="font-family: 'Outfit';">Carregando...</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" style="width: auto; background: transparent; border: 1px solid var(--glass-border); color: #ef4444;" onclick="deleteNote()">
+                        <i class="ri-delete-bin-line"></i> Excluir Caderno
+                    </button>
+                    <button class="modal-close" style="position: static;" onclick="closeNotebook()">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="notebook-layout">
+                <!-- Sidebar: Pages List -->
+                <aside class="notebook-sidebar">
+                    <button class="btn-add-page" onclick="createNewPage()">
+                        <i class="ri-add-line"></i> Nova Página
+                    </button>
+                    <div id="pages-list" class="pages-list">
+                        <!-- Pages will load here -->
+                    </div>
+                </aside>
+
+                <!-- Content: Editor Area -->
+                <main class="notebook-editor" id="notebook-editor-placeholder">
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted);">
+                        <i class="ri-article-line" style="font-size: 4rem; opacity: 0.2; margin-bottom: 1rem;"></i>
+                        <p>Selecione uma página para começar</p>
+                    </div>
+                </main>
+
+                <main class="notebook-editor" id="page-editor-form" style="display: none;">
+                    <input type="text" id="page-title" class="page-title-input" placeholder="Título da Página" onblur="saveCurrentPage()">
+                    <textarea id="page-content" class="page-content-area" placeholder="Comece a escrever aqui..." onblur="saveCurrentPage()"></textarea>
+                    
+                    <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                        <span id="save-status" style="font-size: 0.8rem; color: var(--text-muted);">Alterações salvas</span>
+                        <button style="background: transparent; border: none; color: #ef4444; font-size: 0.9rem; cursor: pointer;" onclick="deleteCurrentPage()">
+                            <i class="ri-delete-bin-7-line"></i> Excluir Página
+                        </button>
+                    </div>
+                </main>
+            </div>
         </div>
     </div>
 

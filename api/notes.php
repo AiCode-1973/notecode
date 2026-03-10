@@ -84,6 +84,83 @@ switch ($action) {
         echo json_encode(['is_favorite' => $stmt->fetchColumn()]);
         break;
 
+    case 'list_pages':
+        $note_id = $_GET['note_id'] ?? null;
+        if (!$note_id) {
+            echo json_encode(['error' => 'Note ID is required']);
+            exit;
+        }
+        $stmt = $pdo->prepare("SELECT pages.* FROM pages JOIN notes ON pages.note_id = notes.id WHERE notes.id = ? AND notes.user_id = ? ORDER BY pages.created_at ASC");
+        $stmt->execute([$note_id, $user_id]);
+        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        break;
+
+    case 'create_page':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $note_id = $data['note_id'] ?? null;
+        $title = trim($data['title'] ?? 'Nova Página');
+
+        if (!$note_id) {
+            echo json_encode(['error' => 'Note ID is required']);
+            exit;
+        }
+
+        // Verify ownership
+        $stmt = $pdo->prepare("SELECT id FROM notes WHERE id = ? AND user_id = ?");
+        $stmt->execute([$note_id, $user_id]);
+        if (!$stmt->fetch()) {
+            echo json_encode(['error' => 'Access denied']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("INSERT INTO pages (note_id, title, content) VALUES (?, ?, '')");
+        $stmt->execute([$note_id, $title]);
+        echo json_encode(['id' => $pdo->lastInsertId(), 'status' => 'success']);
+        break;
+
+    case 'update_page':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $page_id = $data['id'] ?? null;
+        $title = $data['title'] ?? '';
+        $content = $data['content'] ?? '';
+
+        if (!$page_id) {
+            echo json_encode(['error' => 'Page ID is required']);
+            exit;
+        }
+
+        // Verify ownership via join
+        $stmt = $pdo->prepare("SELECT pages.id FROM pages JOIN notes ON pages.note_id = notes.id WHERE pages.id = ? AND notes.user_id = ?");
+        $stmt->execute([$page_id, $user_id]);
+        if (!$stmt->fetch()) {
+            echo json_encode(['error' => 'Access denied']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("UPDATE pages SET title = ?, content = ? WHERE id = ?");
+        $stmt->execute([$title, $content, $page_id]);
+        echo json_encode(['status' => 'success']);
+        break;
+
+    case 'delete_page':
+        $page_id = $_GET['id'] ?? null;
+        if (!$page_id) {
+            echo json_encode(['error' => 'Page ID is required']);
+            exit;
+        }
+        // Verify ownership
+        $stmt = $pdo->prepare("SELECT pages.id FROM pages JOIN notes ON pages.note_id = notes.id WHERE pages.id = ? AND notes.user_id = ?");
+        $stmt->execute([$page_id, $user_id]);
+        if (!$stmt->fetch()) {
+            echo json_encode(['error' => 'Access denied']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("DELETE FROM pages WHERE id = ?");
+        $stmt->execute([$page_id]);
+        echo json_encode(['status' => 'success']);
+        break;
+
     default:
         http_response_code(400);
         echo json_encode(['error' => 'Invalid action']);
