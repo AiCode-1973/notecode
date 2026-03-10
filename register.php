@@ -16,7 +16,9 @@ if (isset($_SESSION['user_id'])) {
 <body class="auth-page">
     <div class="auth-container">
         <div class="auth-card">
-            <h1>NoteCode</h1>
+            <div class="auth-logo" style="text-align: center; margin-bottom: 20px;">
+                <img src="assets/img/logo.png" alt="NoteCode Logo" style="max-width: 220px; height: auto;">
+            </div>
             <p>Comece a organizar suas idéias hoje!</p>
 
             <?php if (isset($_SESSION['error'])): ?>
