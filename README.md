@@ -5,7 +5,7 @@ Building a premium, modern notepad system with a focus on aesthetics and user ex
 ## Tech Stack
 -   **Frontend**: HTML5, CSS3 (Vanilla), JavaScript (ES6+)
 -   **Backend**: PHP (XAMPP environment)
--   **Database**: SQLite (Zero-config, portable)
+-   **Database**: MySQL (Remote Connection)
 
 ## Features
 -   [ ] **Authentication**: Secure Login and Registration screens.
