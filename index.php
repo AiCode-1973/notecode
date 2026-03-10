@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_id'])) {
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <img src="assets/img/logo.png" alt="NoteCode Logo" style="max-width: 100%; height: auto; display: block;">
+                <img src="assets/img/logo.jpeg" alt="NoteCode Logo" style="max-height: 128px; width: 228px; display: block;">
             </div>
 
             <nav class="nav-menu">

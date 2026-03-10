@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-logo" style="text-align: center; margin-bottom: 20px;">
-                <img src="assets/img/logo.png" alt="NoteCode Logo" style="max-width: 220px; height: auto;">
+                <img src="assets/img/logo.jpeg" alt="NoteCode Logo" style="max-height: 128px; width: 228px; height: auto;">
             </div>
             <p>Comece a organizar suas idéias hoje!</p>
 
