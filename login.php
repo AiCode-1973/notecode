@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="auth-container split-layout">
         <div class="auth-left">
             <div class="auth-logo-large">
-                <img src="assets/img/logo.jpeg" alt="NoteCode Logo">
+                <img src="assets/img/logo.jpeg" alt="Logo">
             </div>
         </div>
         <div class="auth-right">
