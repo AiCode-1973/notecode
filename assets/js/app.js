@@ -8,10 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listener for notebook form submission
     const noteForm = document.getElementById('note-form');
-    noteForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        saveNotebook();
-    });
+    if (noteForm) {
+        noteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            saveNotebook();
+        });
+    }
 
     // Close modals if clicking overlay
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -24,10 +26,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+let savedSelection = null;
+
+function saveSelection() {
+    const sel = window.getSelection();
+    if (sel.rangeCount > 0) {
+        savedSelection = sel.getRangeAt(0);
+    }
+}
+
+function restoreSelection() {
+    if (savedSelection) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedSelection);
+    }
+}
+
+// --- Rich Text Helper ---
+function execCommand(command, value = null) {
+    restoreSelection();
+    document.execCommand('styleWithCSS', false, true);
+    document.execCommand(command, false, value);
+    document.getElementById('page-content').focus();
+    saveSelection(); // Update for next command
+}
+
 // --- Notebook Management ---
 
 async function loadNotes() {
     const grid = document.getElementById('notes-grid');
+    if (!grid) return;
     grid.innerHTML = '<div class="loading-state" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);"><i class="ri-loader-4-line ri-spin" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>Carregando seus cadernos...</div>';
     
     try {
@@ -179,36 +208,45 @@ async function createNewPage() {
             currentPageId = result.id;
             await loadPages();
             const newPage = pages.find(p => p.id == result.id);
-            if (newPage) selectPage(newPage);
+            if (newPage) selectPage(newPage, true);
         }
     } catch (err) {
         console.error('Error creating page:', err);
     }
 }
 
-function selectPage(page) {
+function selectPage(page, isNew = false) {
     currentPageId = page.id;
     
     // Update active class in list
     document.querySelectorAll('.page-item').forEach(item => item.classList.remove('active'));
-    document.getElementById('pages-list').querySelectorAll('.page-item').forEach(item => {
-        if (item.textContent.includes(page.title)) item.classList.add('active');
+    document.querySelectorAll('.page-item').forEach(item => {
+        if (item.querySelector('span').textContent === page.title) {
+            item.classList.add('active');
+        }
     });
 
     document.getElementById('notebook-editor-placeholder').style.display = 'none';
     document.getElementById('page-editor-form').style.display = 'flex';
     
     document.getElementById('page-title').value = page.title;
-    document.getElementById('page-content').value = page.content;
+    document.getElementById('page-content').innerHTML = page.content || '';
     
-    document.getElementById('save-status').textContent = 'Salvo';
+    // Set initial focus and selection
+    setTimeout(() => {
+        const content = document.getElementById('page-content');
+        content.focus();
+        saveSelection();
+    }, 100);
+
+    document.getElementById('save-status').textContent = isNew ? 'Nova página' : 'Alterações salvas';
 }
 
 async function saveCurrentPage() {
     if (!currentPageId) return;
     
     const title = document.getElementById('page-title').value;
-    const content = document.getElementById('page-content').value;
+    const content = document.getElementById('page-content').innerHTML;
     const status = document.getElementById('save-status');
     
     status.textContent = 'Salvando...';
@@ -222,6 +260,7 @@ async function saveCurrentPage() {
         const result = await response.json();
         if (result.status === 'success') {
             status.textContent = 'Alterações salvas';
+            
             // Update page title in sidebar without full reload
             const activePage = document.querySelector('.page-item.active span');
             if (activePage) activePage.textContent = title || 'Sem título';

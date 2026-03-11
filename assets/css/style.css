@@ -569,6 +569,59 @@ body {
   resize: none;
   outline: none;
   width: 100%;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.page-content-area:empty:before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Toolbar Styling */
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+}
+
+.toolbar-btn {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.toolbar-btn.active {
+  background: var(--primary);
+  color: var(--bg-dark);
+}
+
+.toolbar-select {
+  background: var(--bg-dark);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  outline: none;
 }
 
 /* Animations */

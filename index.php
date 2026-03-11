@@ -127,7 +127,29 @@ if (!isset($_SESSION['user_id'])) {
 
                 <main class="notebook-editor" id="page-editor-form" style="display: none;">
                     <input type="text" id="page-title" class="page-title-input" placeholder="Título da Página" onblur="saveCurrentPage()">
-                    <textarea id="page-content" class="page-content-area" placeholder="Comece a escrever aqui..." onblur="saveCurrentPage()"></textarea>
+                    
+                    <div class="editor-toolbar">
+                        <button class="toolbar-btn" onclick="execCommand('bold')" title="Negrito"><i class="ri-bold"></i></button>
+                        <button class="toolbar-btn" onclick="execCommand('italic')" title="Itálico"><i class="ri-italic"></i></button>
+                        <button class="toolbar-btn" onclick="execCommand('underline')" title="Sublinhado"><i class="ri-underline"></i></button>
+                        <div style="width: 1px; height: 24px; background: var(--glass-border); margin: 0 4px;"></div>
+                        <button class="toolbar-btn" onclick="execCommand('justifyLeft')" title="Esquerda"><i class="ri-align-left"></i></button>
+                        <button class="toolbar-btn" onclick="execCommand('justifyCenter')" title="Centro"><i class="ri-align-center"></i></button>
+                        <button class="toolbar-btn" onclick="execCommand('justifyRight')" title="Direita"><i class="ri-align-right"></i></button>
+                        <div style="width: 1px; height: 24px; background: var(--glass-border); margin: 0 4px;"></div>
+                        <button class="toolbar-btn" onclick="execCommand('insertUnorderedList')" title="Lista"><i class="ri-list-unordered"></i></button>
+                        <div style="width: 1px; height: 24px; background: var(--glass-border); margin: 0 4px;"></div>
+                        <input type="color" class="toolbar-select" onchange="execCommand('foreColor', this.value)" style="height: 32px; width: 40px; padding: 0; cursor: pointer;" title="Cor da Letra">
+                        <select class="toolbar-select" onchange="execCommand('fontSize', this.value)">
+                            <option value="3">Tamanho</option>
+                            <option value="1">Pequeno</option>
+                            <option value="3">Normal</option>
+                            <option value="5">Grande</option>
+                            <option value="7">Extra Grande</option>
+                        </select>
+                    </div>
+
+                    <div id="page-content" class="page-content-area" contenteditable="true" data-placeholder="Comece a escrever aqui..." onmouseup="saveSelection()" onkeyup="saveSelection()" onblur="saveCurrentPage()"></div>
                     
                     <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
                         <span id="save-status" style="font-size: 0.8rem; color: var(--text-muted);">Alterações salvas</span>
